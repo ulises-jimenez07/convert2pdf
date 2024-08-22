@@ -53,7 +53,7 @@ def upload_output(item: Item,output_file_path):
     output_bucket = storage_client.bucket(item.output_bucket)
     output_blob = output_bucket.blob(item.output_file)
     output_blob.upload_from_filename(output_file_path)
-    return output_blob.self_link
+    return f"gs://{item.output_bucket}/{item.output_file}"
     
 @app.post("/convert2pdf")
 async def create_item(item: Item): 
