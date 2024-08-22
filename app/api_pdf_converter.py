@@ -1,3 +1,7 @@
+#  Copyright 2024 Google. This software is provided as-is, without warranty or
+#  representation for any use or purpose.
+#  Your use of it is subject to your agreement with Google
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 
@@ -6,7 +10,7 @@ from google.cloud import storage
 import os
 import subprocess
 
-PROJECT_ID = 'project-id'
+PROJECT_ID = os.getenv("GCP_PROJECT_ID")
 storage_client = storage.Client(project=PROJECT_ID)
 
 class Item(BaseModel):
@@ -20,7 +24,7 @@ app = FastAPI()
 
 def convert_file_to_pdf(input_file):
     subprocess.run(
-        f'sudo libreoffice \
+        f'libreoffice \
         --convert-to pdf \
          {input_file}', shell=True)    
     output_file_name = os.path.basename(input_file)
@@ -44,10 +48,10 @@ def upload_output(item: Item,output_file_path):
     
 @app.post("/convert2pdf")
 async def create_item(item: Item): 
-
+   
     input_file_name = download_storage_tmp(item)
     output_file_name = convert_file_to_pdf(input_file_name)
-   
+
     upload_output(item,output_file_name)
     
     os.remove(input_file_name)
