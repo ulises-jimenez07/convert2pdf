@@ -6,7 +6,7 @@ from google.cloud import storage
 import os
 import subprocess
 
-PROJECT_ID = 'gsd-ai-mx-ulises'
+PROJECT_ID = 'project-id'
 storage_client = storage.Client(project=PROJECT_ID)
 
 class Item(BaseModel):
