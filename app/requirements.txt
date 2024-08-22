@@ -1,4 +1,5 @@
 fastapi
 pydantic
 uvicorn
+google-cloud
 google-cloud-storage
