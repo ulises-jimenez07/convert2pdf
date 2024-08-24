@@ -1,4 +1,8 @@
-# README
+# Convert2PDF
+
+This repository contains the implementation of an API to convert Office Suite files to PDF.
+
+In addition, this repository contains the implementation of a service to summarize documents using GenAI, where a showcase is made on the call to the Convert2PDF API when the file is from the Office Suite.
 
 
 # Create AI
