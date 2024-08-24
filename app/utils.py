@@ -1,27 +1,11 @@
-#  Copyright 2024 Google. This software is provided as-is, without warranty or
-#  representation for any use or purpose.
-#  Your use of it is subject to your agreement with Google
-
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+import os
+import subprocess
 
 from google.cloud import storage
 from google.api_core.exceptions import NotFound
 
-import os
-import subprocess
-
 PROJECT_ID = os.getenv("GCP_PROJECT_ID")
 storage_client = storage.Client(project=PROJECT_ID)
-
-class Item(BaseModel):
-    input_bucket: str
-    input_file: str 
-    output_bucket: str
-    output_file: str | None = None
-
-
-app = FastAPI()
 
 def convert_file_to_pdf(input_file):
     try:
@@ -54,17 +38,3 @@ def upload_output(item: Item,output_file_path):
     output_blob = output_bucket.blob(item.output_file)
     output_blob.upload_from_filename(output_file_path)
     return f"gs://{item.output_bucket}/{item.output_file}"
-    
-@app.post("/convert2pdf")
-async def create_item(item: Item): 
-    try:
-        input_file_name = download_storage_tmp(item)
-        output_file_name = convert_file_to_pdf(input_file_name)
-        output_url = upload_output(item,output_file_name)
-        
-        os.remove(input_file_name)
-        os.remove(output_file_name)
-        
-        return {"message": "File converted and copied successfully", "url": output_url}
-    except (RuntimeError, FileNotFoundError) as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
