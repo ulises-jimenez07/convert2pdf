@@ -18,14 +18,36 @@ from fastapi import FastAPI
 
 from model import Item
 
-from utils import download_storage_tmp
-from utils import convert_file_to_pdf
 from utils import upload_output
+from utils import convert_file_to_pdf
+from utils import download_storage_tmp
 
 app = FastAPI()  
 
 @app.post("/convert2pdf")
 def convert2pdf(item: Item): 
+    """Converts a file to PDF format and uploads the result to Cloud Storage.
+
+    This function handles a POST request to the "/convert2pdf" endpoint. 
+    It expects an `Item` object in the request body containing the input 
+    bucket and file path.
+
+    The function performs the following steps:
+
+    1. Downloads the file from Cloud Storage.
+    2. Converts the downloaded file to PDF format using LibreOffice.
+    3. Uploads the converted PDF to the specified output bucket in Cloud Storage.
+    4. Returns a JSON response with status code, message, and the uploaded file URL.
+
+    Args:
+        item: An Item object containing the input bucket name and file path.
+
+    Returns:
+        A dictionary containing the following keys:
+            statusCode (int): HTTP status code (200 for success, 500 for error).
+            message (str): Descriptive message about the conversion process.
+            url (str): Public URL of the uploaded PDF file (if successful).
+    """
     
     payload = {
         "statusCode": None,
