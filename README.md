@@ -7,8 +7,8 @@ This repository contains the implementation of an API to convert [MS Office Suit
 In addition, this repository contains the implementation of a service to summarize documents using GenAI, where a showcase is made on the call to the Convert2PDF API when the file is from the [MS Office Suite](https://apps.microsoft.com/detail/9mwk7rn11c5z?cid=majornelson).
 
 
-# How to deploy the API in Google Cloud
-This section explains the requirements and implementations necessary to deploy the API localized in `app/`.
+# 1. How to deploy the API in Google Cloud
+This section explains the requirements and implementations necessary to host and deploy the containerized API localized in `app/`.
 
 ### 1. Authenticate
 
@@ -19,59 +19,79 @@ $ gcloud init
 $ gcloud auth application-default login
 ```
 
-2. Initialize global variables
-    ```bash
-    PROJECT_ID="project-id" 
-    REGION="us-central1" 
-    ```
+When entering the above commands, the respective credentials will be required for authentication.
 
-3. Create artifact registry to store images
-    ```bash
-    gcloud artifacts repositories create cloudrun-images \
-    --repository-format=docker \
-    --location=$REGION \
-    --description="images for cloud run deploy" \
-    --immutable-tags \
-    --async
-    ```
+### 2. Initialize global variables
 
-4. Configure permission to local docker to push to registry
+Next, we will need to export environment variables which refer to the `PROJECT_ID` and `REGION` of the project:
 
-    ```bash
-    gcloud auth configure-docker $REGION-docker.pkg.dev
-    ```
+```bash
+$ export PROJECT_ID="project-id" 
+$ export REGION="us-central1" 
+```
 
-5. Build the images using Cloud Build
+### 3. Create Artifact Registry to store Docker images
 
-    ```bash
-    gcloud builds submit --tag $REGION- docker.pkg.dev/$PROJECT_ID/cloudrun-images/convert2pdf:latest
-    ```
+Next, we will create a repository for Docker images in [Artifact Registry](https://cloud.google.com/artifact-registry):
 
-6. Deploy the cloud Run API using the previous created image
+```bash
+$ gcloud artifacts repositories create cloudrun-images \
+--repository-format=docker \
+--location=$REGION \
+--description="images for cloud run deploy" \
+--immutable-tags \
+--async
+```
 
-    ```bash
-    gcloud run deploy convert2pdf \
-    --image $REGION-docker.pkg.dev/$PROJECT_ID/cloudrun-images/convert2pdf \
-    --platform managed \
-    --region $REGION \
-    --allow-unauthenticated 
-    ```
+### 4. Configure local permissions
 
-7. Test API
+In order to connect from our premises to Artifact Registry, we need to assign the respective permissions:
 
-    ```bash
-    curl -X POST \
-    -H "Content-Type: application/json" \
-    -d '{
-        "input_bucket": "",
-        "input_file": "",
-        "output_bucket": "",
-        "output_file": "" 
-    }'  \
-    https://convert2pdf-hl3pwu44oa-uc.a.run.app/convert2pdf
-    ```
+```bash
+$ gcloud auth configure-docker $REGION-docker.pkg.dev
+```
 
-# Create Cloud function
+This will allow us to push docker images from our local machine.
+
+### 5. Build the Docker image using Cloud Build
+
+To build the image from the Dockerfile, we will use Cloud Build as shown below:
+
+```bash
+$ gcloud builds submit --tag $REGION- docker.pkg.dev/$PROJECT_ID/cloudrun-images/convert2pdf:latest
+```
+
+### 6. Deploy Cloud Run API
+
+Once the image is built, we will deploy it to Cloud Run with the following command:
+
+```bash
+$ gcloud run deploy convert2pdf \
+--image $REGION-docker.pkg.dev/$PROJECT_ID/cloudrun-images/convert2pdf \
+--platform managed \
+--region $REGION \
+--allow-unauthenticated 
+```
+
+### 7. Test API
+
+```bash
+curl -X POST \
+-H "Content-Type: application/json" \
+-d '{
+    "input_bucket": "",
+    "input_file": "",
+    "output_bucket": "",
+    "output_file": "" 
+}'  \
+https://convert2pdf-hl3pwu44oa-uc.a.run.app/convert2pdf
+```
+
+
+# 2. Summarization Application 
+In this section we will see how to deploy the file summarization service in a Cloud Function.
+
+*IN PROGRESS*
 **This section has to be reviewed**
 
 1. create bucket for storing 
