@@ -15,7 +15,6 @@
 from pydantic import BaseModel
 
 class Item(BaseModel):
-    input_bucket: str
-    input_file: str 
-    output_bucket: str
-    output_file: str | None = None
+    bucket: str
+    input_file_name: str 
+    output_file_name: str | None = None

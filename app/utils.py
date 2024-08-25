@@ -35,9 +35,10 @@ def download_storage_tmp(item: Item):
     Raises:
         FileNotFoundError: If the file is not found in the bucket.
     """
-    input_bucket = storage_client.bucket(item.input_bucket)
-    input_blob = input_bucket.blob(item.input_file)
-    input_file_name = os.path.basename(item.input_file) 
+    
+    input_bucket = storage_client.bucket(f"gs://{item.bucket}")
+    input_blob = input_bucket.blob(item.input_file_name)
+    input_file_name = os.path.basename(item.input_file_name) 
     try:
         input_blob.download_to_filename(input_file_name)
     except NotFound as e:
@@ -74,7 +75,7 @@ def convert_file_to_pdf(input_file):
         return None
     
 
-def upload_output(item: Item,output_file_path):
+def upload_output(item: Item, output_file_path):
     """Uploads a file to a Google Cloud Storage bucket.
 
     Args:
@@ -84,8 +85,8 @@ def upload_output(item: Item,output_file_path):
     Returns:
         The public URL of the uploaded file.
     """
-    output_bucket = storage_client.bucket(item.output_bucket)
-    output_blob = output_bucket.blob(item.output_file)
+    output_bucket = storage_client.bucket(f"gs://{item.bucket}")
+    output_blob = output_bucket.blob(item.output_file_name)
     output_blob.upload_from_filename(output_file_path)
     
-    return f"gs://{item.output_bucket}/{item.output_file}"
+    return f"gs://{item.bucket}/{item.output_file_name}"
