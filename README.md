@@ -88,10 +88,11 @@ https://convert2pdf-hl3pwu44oa-uc.a.run.app/convert2pdf
 ```
 
 
-# 2. Summarization Application 
+# 2. Application for Summarization
 In this section we will see how to deploy the file summarization service in a Cloud Function.
 
 *IN PROGRESS*
+
 **This section has to be reviewed**
 
 1. create bucket for storing 
