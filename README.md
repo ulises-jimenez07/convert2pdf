@@ -79,10 +79,9 @@ $ gcloud run deploy convert2pdf \
 curl -X POST \
 -H "Content-Type: application/json" \
 -d '{
-    "input_bucket": "",
-    "input_file": "",
-    "output_bucket": "",
-    "output_file": "" 
+    "bucket": "my-bucket",
+    "input_file_name": "file.docx",
+    "output_file_name": "file.pdf" 
 }'  \
 https://convert2pdf-hl3pwu44oa-uc.a.run.app/convert2pdf
 ```
