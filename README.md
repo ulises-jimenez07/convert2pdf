@@ -10,14 +10,14 @@ In addition, this repository contains the implementation of a service to summari
 # How to deploy the API in Google Cloud
 This section explains the requirements and implementations necessary to deploy the API localized in `app/`.
 
-1. **Authenticate**
+### 1. Authenticate
 
 The first step is to authenticate via `gcloud` as shown below:
 
-    ```bash
-    gcloud init
-    gcloud auth application-default login
-    ```
+```bash
+$ gcloud init
+$ gcloud auth application-default login
+```
 
 2. Initialize global variables
     ```bash
