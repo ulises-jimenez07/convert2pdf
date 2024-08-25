@@ -7,8 +7,13 @@ This repository contains the implementation of an API to convert [MS Office Suit
 In addition, this repository contains the implementation of a service to summarize documents using GenAI, where a showcase is made on the call to the Convert2PDF API when the file is from the [MS Office Suite](https://apps.microsoft.com/detail/9mwk7rn11c5z?cid=majornelson).
 
 
-# Create AI
-1. Authenticate
+# How to deploy the API in Google Cloud
+This section explains the requirements and implementations necessary to deploy the API localized in `app/`.
+
+1. **Authenticate**
+
+The first step is to authenticate via `gcloud` as shown below:
+
     ```bash
     gcloud init
     gcloud auth application-default login
