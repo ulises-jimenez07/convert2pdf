@@ -75,6 +75,8 @@ $ gcloud run deploy convert2pdf \
 
 ### 7. Test API
 
+Get the URL from the deployed API similar to:  `https://convert2pdf-url/convert2pdf` and replace it in the URL below:
+
 ```bash
 curl -X POST \
 -H "Content-Type: application/json" \
@@ -83,47 +85,8 @@ curl -X POST \
     "input_file_name": "file.docx",
     "output_file_name": "file.pdf" 
 }'  \
-https://convert2pdf-hl3pwu44oa-uc.a.run.app/convert2pdf
+URL
 ```
-
-
-# 2. Application for Summarization
-In this section we will see how to deploy the file summarization service in a Cloud Function.
-
-*IN PROGRESS*
-
-**This section has to be reviewed**
-
-1. create bucket for storing 
-   
-2. Create Pub Sub topic
-   ```bash
-    TOPIC_NAME="documents" 
-    gcloud pubsub topics create $TOPIC_NAME    
-   ```
-3. Add notifications to the bucket created in step 2.
-   ```bash
-    BUCKET_NAME="bucket-flutter-app"
-
-    gcloud storage buckets notifications create gs://$BUCKET_NAME --topic=$TOPIC_NAME    
-   ```
-4. Create Cloud function with 
-
-    ```bash
-    gcloud functions deploy fill_word_template \
-    --project=$PROJECT_ID \
-    --region=$REGION \
-    --runtime python39 \
-    --trigger-http \
-    --source . \
-    --entry-point fill_word_2_pdf \
-    --set-env-vars "TEMPLATE_BUCKET_NAME=doc-ai-extractor-temp,TEMPLATE_FILE_NAME=convenio_confidencialidad.docx,OUTPUT_BUCKET_NAME=doc-ai-extractor-temp,PDF_CONVERTER_URL=https://convert2pdf-hl3pwu44oa-uc.a.run.app/convert2pdf" \
-    --timeout 240s \
-    --memory 512MB \
-    --gen2
-    ```
-
-
 
 # References
 - https://cloud.google.com/run/docs/building/containers
