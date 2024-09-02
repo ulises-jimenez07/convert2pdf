@@ -13,8 +13,8 @@ This section explains the requirements and implementations necessary to host and
 The first step is to authenticate via `gcloud` as shown below:
 
 ```bash
-$ gcloud init
-$ gcloud auth application-default login
+gcloud init
+gcloud auth application-default login
 ```
 
 When entering the above commands, the respective credentials will be required for authentication.
@@ -24,8 +24,8 @@ When entering the above commands, the respective credentials will be required fo
 Next, we will need to export environment variables which refer to the `PROJECT_ID` and `REGION` of the project:
 
 ```bash
-$ export PROJECT_ID="project-id" 
-$ export REGION="us-central1" 
+export PROJECT_ID=$(gcloud config get-value project)
+export REGION=us-central1
 ```
 
 ### 3. Create Artifact Registry to store Docker images
@@ -46,20 +46,25 @@ $ gcloud artifacts repositories create cloudrun-images \
 In order to connect from our premises to Artifact Registry, we need to assign the respective permissions:
 
 ```bash
-$ gcloud auth configure-docker $REGION-docker.pkg.dev
+gcloud auth configure-docker $REGION-docker.pkg.dev
 ```
 
 This will allow us to push docker images from our local machine.
+### 5. Clone the repository
 
-### 5. Build the Docker image using Cloud Build
+```bash
+git clone https://github.com/ulises-jimenez07/convert2pdf.git
+cd convert2pdf/app/
+```
+### 6. Build the Docker image using Cloud Build
 
 To build the image from the Dockerfile, we will use Cloud Build as shown below:
 
 ```bash
-$ gcloud builds submit --tag $REGION- docker.pkg.dev/$PROJECT_ID/cloudrun-images/convert2pdf:latest
+gcloud builds submit --tag $REGION-docker.pkg.dev/$PROJECT_ID/cloudrun-images/convert2pdf:latest
 ```
 
-### 6. Deploy Cloud Run API
+### 7. Deploy Cloud Run API
 
 Once the image is built, we will deploy it to Cloud Run with the following command:
 
@@ -71,7 +76,7 @@ $ gcloud run deploy convert2pdf \
 --allow-unauthenticated 
 ```
 
-### 7. Test API
+### 8. Test API
 
 Get the URL from the deployed API similar to:  `https://convert2pdf-url/convert2pdf` and replace it in the URL below:
 
@@ -85,6 +90,9 @@ curl -X POST \
 }'  \
 URL
 ```
+
+### 9. Example
+
 
 # References
 - https://cloud.google.com/run/docs/building/containers

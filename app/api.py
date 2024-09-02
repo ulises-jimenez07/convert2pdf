@@ -67,8 +67,6 @@ def convert2pdf(item: Item):
         payload["statusCode"] = 200
         payload["message"] = "File converted and copied successfully"
         payload["url"] = output_url
-    
-    finally:
         os.remove(input_file_name)
         os.remove(output_file_name)
 
