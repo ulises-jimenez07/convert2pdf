@@ -91,6 +91,29 @@ curl -X POST \
 URL
 ```
 
+### 9. Example
+This example creates a new bucket in cloud storage, uploads, transform and download the file provided in this bucket converted as PDF. Assuming we are located in the `convert2pdf/` directory.
+
+```bash
+export BUCKET_NAME="gs://$PROJECT_ID-convert2pdf"
+gsutil mb -p $PROJECT_ID $BUCKET_NAME
+
+gsutil cp hustle_flyer.docx $BUCKET_NAME/
+
+export SERVICE_URL=$(gcloud run services describe convert2pdf --format='value(status.url)' --region=$REGION)
+
+curl -X POST \
+-H "Content-Type: application/json" \
+-d '{
+    "bucket": $BUCKET_NAME,
+    "input_file_name": "hustle_flyer.docx",
+    "output_file_name": "hustle_flyer.pdf" 
+}' $SERVICE_URL/convert2pdf
+
+
+gsutil cp $BUCKET_NAME/hustle_flyer.pdf .
+```
+
 # References
 - https://cloud.google.com/run/docs/building/containers
 - https://cloud.google.com/artifact-registry/docs/docker/troubleshoot
