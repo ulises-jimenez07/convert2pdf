@@ -59,17 +59,15 @@ def convert2pdf(item: Item):
         input_file_name = download_storage_tmp(item)
         output_file_name = convert_file_to_pdf(input_file_name)
         output_url = upload_output(item,output_file_name)
-
     except (RuntimeError, FileNotFoundError) as e:
-        payload["statusCode"], payload["message"] = 500, e
-
+        payload["statusCode"], payload["message"] = 500, str(e)
+    except:
+        payload["statusCode"], payload["message"] = 500, f"Something went wrong. Review the data provided {item}"
     else:
         payload["statusCode"] = 200
         payload["message"] = "File converted and copied successfully"
         payload["url"] = output_url
-    
-    finally:
         os.remove(input_file_name)
         os.remove(output_file_name)
-
+    finally:
         return payload

@@ -36,7 +36,7 @@ def download_storage_tmp(item: Item):
         FileNotFoundError: If the file is not found in the bucket.
     """
     
-    input_bucket = storage_client.bucket(f"gs://{item.bucket}")
+    input_bucket = storage_client.bucket(item.bucket)
     input_blob = input_bucket.blob(item.input_file_name)
     input_file_name = os.path.basename(item.input_file_name) 
     try:
@@ -85,7 +85,7 @@ def upload_output(item: Item, output_file_path):
     Returns:
         The public URL of the uploaded file.
     """
-    output_bucket = storage_client.bucket(f"gs://{item.bucket}")
+    output_bucket = storage_client.bucket(item.bucket)
     output_blob = output_bucket.blob(item.output_file_name)
     output_blob.upload_from_filename(output_file_path)
     
