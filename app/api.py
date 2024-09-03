@@ -61,7 +61,7 @@ def convert2pdf(item: Item):
         output_url = upload_output(item,output_file_name)
 
     except (RuntimeError, FileNotFoundError) as e:
-        payload["statusCode"], payload["message"] = 500, e
+        payload["statusCode"], payload["message"] = 500, str(e)
 
     else:
         payload["statusCode"] = 200

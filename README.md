@@ -33,11 +33,10 @@ export REGION=us-central1
 Next, we will create a repository for Docker images in [Artifact Registry](https://cloud.google.com/artifact-registry):
 
 ```bash
-$ gcloud artifacts repositories create cloudrun-images \
+gcloud artifacts repositories create cloudrun-images \
 --repository-format=docker \
 --location=$REGION \
 --description="images for cloud run deploy" \
---immutable-tags \
 --async
 ```
 
@@ -69,10 +68,11 @@ gcloud builds submit --tag $REGION-docker.pkg.dev/$PROJECT_ID/cloudrun-images/co
 Once the image is built, we will deploy it to Cloud Run with the following command:
 
 ```bash
-$ gcloud run deploy convert2pdf \
+gcloud run deploy convert2pdf \
 --image $REGION-docker.pkg.dev/$PROJECT_ID/cloudrun-images/convert2pdf \
 --platform managed \
 --region $REGION \
+--port 8000 \
 --allow-unauthenticated 
 ```
 
@@ -90,9 +90,6 @@ curl -X POST \
 }'  \
 URL
 ```
-
-### 9. Example
-
 
 # References
 - https://cloud.google.com/run/docs/building/containers
