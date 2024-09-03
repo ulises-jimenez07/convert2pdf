@@ -81,37 +81,42 @@ gcloud run deploy convert2pdf \
 Get the URL from the deployed API similar to:  `https://convert2pdf-url/convert2pdf` and replace it in the URL below:
 
 ```bash
-curl -X POST \
--H "Content-Type: application/json" \
--d '{
-    "bucket": "my-bucket",
-    "input_file_name": "file.docx",
-    "output_file_name": "file.pdf" 
-}'  \
-URL
-```
-
-### 9. Example
-This example creates a new bucket in cloud storage, uploads, transform and download the file provided in this bucket converted as PDF. Assuming we are located in the `convert2pdf/` directory.
-
-```bash
-export BUCKET_NAME="gs://$PROJECT_ID-convert2pdf"
-gsutil mb -p $PROJECT_ID $BUCKET_NAME
-
-gsutil cp hustle_flyer.docx $BUCKET_NAME/
 
 export SERVICE_URL=$(gcloud run services describe convert2pdf --format='value(status.url)' --region=$REGION)
 
 curl -X POST \
 -H "Content-Type: application/json" \
 -d '{
-    "bucket": $BUCKET_NAME,
+    "bucket": "my-bucket",
+    "input_file_name": "file.docx",
+    "output_file_name": "file.pdf" 
+}' $SERVICE_URL/convert2pdf
+```
+
+### 9. Example
+
+This example demonstrates how to use the deployed API. It walks through creating a new bucket in Cloud Storage, uploading a sample .docx file, using the API to convert it to PDF, and finally downloading the converted file.
+
+Make sure you are located in the `convert2pdf/` directory for this example.
+
+```bash
+export BUCKET_NAME="$PROJECT_ID-convert2pdf"
+gsutil mb -p $PROJECT_ID gs://$BUCKET_NAME
+
+gsutil cp hustle_flyer.docx gs://$BUCKET_NAME/
+
+export SERVICE_URL=$(gcloud run services describe convert2pdf --format='value(status.url)' --region=$REGION)
+
+curl -X POST \
+-H "Content-Type: application/json" \
+-d '{
+    "bucket": "'"$BUCKET_NAME"'",
     "input_file_name": "hustle_flyer.docx",
     "output_file_name": "hustle_flyer.pdf" 
 }' $SERVICE_URL/convert2pdf
 
 
-gsutil cp $BUCKET_NAME/hustle_flyer.pdf .
+gsutil cp gs://$BUCKET_NAME/hustle_flyer.pdf .
 ```
 
 # References
