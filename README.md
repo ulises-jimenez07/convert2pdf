@@ -60,7 +60,7 @@ cd convert2pdf/app/
 To build the image from the Dockerfile, we will use Cloud Build as shown below:
 
 ```bash
-gcloud builds submit --tag $REGION-docker.pkg.dev/$PROJECT_ID/cloudrun-images/convert2pdf:latest
+gcloud builds submit . --tag $REGION-docker.pkg.dev/$PROJECT_ID/cloudrun-images/convert2pdf:latest
 ```
 
 ### 7. Deploy Cloud Run API
